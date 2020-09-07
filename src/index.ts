@@ -116,6 +116,9 @@ export type RxPond = {
      * To obtain progress information about the sync, look at the intermediate values emitted by the Observable.
      */
     waitForSwarmSync(): Observable<SplashState>
+
+    /** The underlying plain Pond instance */
+    originalPond: Pond
 }
 
 const wrap = (pond: Pond): RxPond => ({
@@ -152,12 +155,14 @@ const wrap = (pond: Pond): RxPond => ({
                 onSyncComplete: () => o.complete(),
             }),
         ),
+
+    originalPond: pond,
 })
 
 export const RxPond = {
-    default: async () => wrap(await Pond.default()),
+    default: async (): Promise<RxPond> => wrap(await Pond.default()),
 
-    of: async (params: Parameters<typeof Pond['of']>) =>
+    of: async (params: Parameters<typeof Pond['of']>): Promise<RxPond> =>
         wrap(await Pond.of(...params)),
 
     from: wrap,
