@@ -1,0 +1,59 @@
+{
+  "name": "@actyx-contrib/pond-rx-adapter",
+  "version": "0.1.0",
+  "description": "RXJS Adapter for Actyx Pond V2",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "prepack": "npm run test:no-coverage && npm run build && npm run license:add && npm run lint",
+    "clean": "rimraf ./lib ./coverage",
+    "tsc": "tsc",
+    "tsc:watch": "tsc --watch --pretty",
+    "build": "tsc -p ./tsconfig.json",
+    "build:watch": "npm run build -- --watch --pretty",
+    "build:doc": "rimraf ./docs & typedoc --options typedoc.json",
+    "test": "TZ=UTC jest",
+    "test:no-coverage": "TZ=UTC jest --coverage=false",
+    "test:watch": "TZ=UTC jest --coverage=false --watch",
+    "lint": "tsc & eslint './src/**/*.{js,ts,tsx}' & prettier './src/**/*.{js,ts,tsx}' --check",
+    "lint:fix": "tsc & eslint './src/**/*.{js,ts,tsx}' --fix & prettier './src/**/*.{js,ts,tsx}' --write",
+    "license:add": "license-check-and-add add -f add-license-config.json",
+    "license:check": "license-check-and-add check -f add-license-config.json",
+    "license:check-dep": "license-checker --production --onlyAllow 'MIT; MIT OR X11; BSD; ISC; Apache-2.0;'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actyx-contrib/pond-rx-adapter.git"
+  },
+  "keywords": [
+    "actyx",
+    "pond"
+  ],
+  "author": "Actyx AG",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/actyx-contrib/pond-rx-adapter/issues"
+  },
+  "homepage": "https://github.com/actyx-contrib/pond-rx-adapter#readme",
+  "peerDependencies": {
+    "@actyx/pond": "~2.2",
+    "rxjs": "> 0"
+  },
+  "devDependencies": {
+    "@actyx/pond": "~2.2",
+    "@types/jest": "25.1.1",
+    "@types/node": "10.11.0",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
+    "@typescript-eslint/parser": "^3.3.0",
+    "babel-jest": "^26.0.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint": "^7.2.0",
+    "jest": "^26.0.1",
+    "license-check-and-add": "^3.0.4",
+    "prettier": "^1.19.1",
+    "rxjs": "~6",
+    "ts-jest": "^26.1.0",
+    "typescript": "3.9.6"
+  }
+}
