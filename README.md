@@ -1,6 +1,9 @@
 # RX Pond
 
-`RxPond.from(myPond).observe(myFish).map(someFunction).subscribe(myCallback)`
+```typescript
+import { RxPond } from '@actyx-contrib/rx-pond'
+RxPond.from(myPond).observe(myFish).map(someFunction).subscribe(myCallback)`
+```
 
 ## Installation
 
@@ -26,15 +29,14 @@ import { RxPond } from '@actyx-contrib/rx-pond'
 const fromExisting = RxPond.from(myPond)
 
 // Create an RxPond backed by a Pond with default parameters
-const defaultPondRx = RxPond.default()
+const defaultRxPond = RxPond.default()
 
 // Provide custom parameters (same arguments as Pond.of)
-const parameterizedPondRx = RxPond.of({ url: 'ws://localhost:4243' }, {})
+const parameterizedRxPond = RxPond.of({ url: 'ws://localhost:4243' }, {})
 ```
 
 ## Compatibility
 
-This library is _version agnostic_ in regards to RXjs – it should work flawlessly with both 5.x and
-6.x.
+This library is _version agnostic_ in regards to RXjs – it works flawlessly with both 5.x and 6.x.
 
-This library should remain compatible with all future releases in the Pond V2 line.
+This library remains compatible with all future releases in the Pond V2 line.
