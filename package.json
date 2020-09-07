@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "prepack": "npm run test:no-coverage && npm run build && npm run license:add && npm run lint",
+    "prepack": "npm run clean && npm run build && npm run license:add && npm run lint",
     "clean": "rimraf ./lib ./coverage",
     "tsc": "tsc",
     "tsc:watch": "tsc --watch --pretty",
@@ -54,6 +54,7 @@
     "prettier": "^1.19.1",
     "rxjs": "~6",
     "ts-jest": "^26.1.0",
+    "typedoc": "^0.17.7",
     "typescript": "3.9.6"
   }
 }

@@ -1,0 +1,11 @@
+.editorconfig          
+.eslintignore          
+.nvmrc                 
+add-license-text       
+.eslintrc.json         
+.prettierrc.json       
+add-license-config.json
+tsconfig.json          
+tsconfig.prod.json     
+src/index.ts
+actyx-contrib-rx-pond-*.tgz         
