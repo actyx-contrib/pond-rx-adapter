@@ -1,5 +1,5 @@
 {
-  "name": "@actyx-contrib/pond-rx-adapter",
+  "name": "@actyx-contrib/rx-pond",
   "version": "0.1.0",
   "description": "RXJS Adapter for Actyx Pond V2",
   "main": "./lib/index.js",
