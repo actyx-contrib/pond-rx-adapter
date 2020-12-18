@@ -17,12 +17,14 @@ import {
     CancelSubscription,
     ConnectivityStatus,
     Fish,
+    ObserveAllOpts,
     Pond,
     PondInfo,
     PondState,
     SplashState,
     StateEffect,
     Tags,
+    Where,
 } from '@actyx/pond'
 import { Observable } from 'rxjs'
 
@@ -50,10 +52,59 @@ export type RxPond = {
      * starting a new one.
      *
      * @param fish       - Complete Fish information.
-     * @returns            An Observable of updated states. Each published state will be strictler newer than the last one.
+     * @returns            An Observable of updated states. Each published state will be stricter newer than the last one.
      *                     (One state is buffered and immediately supplied to new subscribers.)
      */
     observe<S, E>(fish: Fish<S, E>): Observable<S>
+
+    /**
+     * Create Fish from events and observe them all.
+     * Note that if a Fish created from some event f0 will also observe events earlier than f0, if they are selected by `where`
+     *
+     * @typeParam F        - Type of the events used to initialize Fish.
+     * @typeParam S        - Type of the observed Fish’s state.
+     *
+     * @param seedEventsSelector  - A `Where<F>` object identifying the seed events to start Fish from
+     * @param makeFish     - Factory function to create a Fish with state `S` from an event of type `F`.
+     *                       If Fish with same FishId are created by makeFish, these Fish must be identical!
+     *                       `undefined` may be returned to indicate the given seed event should not be converted to a Fish at all.
+     * @param opts         - Optional arguments regarding caching and expiry
+     *
+     * @returns            An Observable of updated states. At least one published state will be stricter newer than the last one.
+     *                     (The last states are buffered and immediately supplied to new subscribers.)
+     *
+     * @beta
+     */
+    observeAll<ESeed, S>(
+        seedEventsSelector: Where<ESeed>,
+        makeFish: (seedEvent: ESeed) => Fish<S, any> | undefined,
+        opts: ObserveAllOpts,
+    ): Observable<S[]>
+
+    /**
+     * Find the event selected by `firstEvent`, and start a Fish from it.
+     * It is legal for `firstEvent` to actually select multiple events;
+     * however, `makeFish` must yield the same Fish no matter one is passed in.
+     *
+     * @typeParam F        - Type of the initial event.
+     * @typeParam S        - Type of the observed Fish’s state.
+     *
+     * @param seedEventSelector   - A `Where<F>` object identifying the seed event
+     * @param makeFish     - Factory function to create the Fish with state `S` from the event of type `F`.
+     *                       The Fish is able to observe events earlier than the first event.
+     * @param callback     - Function that will be called with the Fish’s state `S`.
+     *                       As long as the first event does not exist, this callback will also not be called.
+     *
+     * @returns              An Observable of updated states. At least one published state will be stricter newer than the last one.
+     *                       As long as the first event does not exist, this callback will also not be called.
+     *                       (The last states are buffered and immediately supplied to new subscribers.)
+     *
+     * @beta
+     */
+    observeOne<ESeed, S>(
+        seedEventSelector: Where<ESeed>,
+        makeFish: (seedEvent: ESeed) => Fish<S, any>,
+    ): Observable<S>
 
     /* CONDITIONAL EMISSION (STATE EFFECTS) */
 
@@ -143,7 +194,36 @@ const wrap = (pond: Pond): RxPond => ({
     },
 
     observe: <S, E>(fish: Fish<S, E>) =>
-        new Observable<S>(o => pond.observe<S, E>(fish, v => o.next(v))),
+        new Observable<S>(o =>
+            pond.observe<S, E>(
+                fish,
+                v => o.next(v),
+                err => o.error(err),
+            ),
+        ),
+
+    observeAll: <ESeed, S>(
+        seedEventsSelector: Where<ESeed>,
+        makeFish: (seedEvent: ESeed) => Fish<S, any> | undefined,
+        opts: ObserveAllOpts,
+    ): Observable<S[]> =>
+        new Observable<S[]>(o =>
+            pond.observeAll<ESeed, S>(seedEventsSelector, makeFish, opts, v =>
+                o.next(v),
+            ),
+        ),
+    observeOne: <ESeed, S>(
+        seedEventsSelector: Where<ESeed>,
+        makeFish: (seedEvent: ESeed) => Fish<S, any>,
+    ): Observable<S> =>
+        new Observable<S>(o =>
+            pond.observeOne<ESeed, S>(
+                seedEventsSelector,
+                makeFish,
+                v => o.next(v),
+                err => o.error(err),
+            ),
+        ),
 
     run: <S, EWrite>(fish: Fish<S, any>, fn: StateEffect<S, EWrite>) => {
         const p = pond.run(fish, fn)
