@@ -1,6 +1,6 @@
 {
   "name": "@actyx-contrib/rx-pond",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "RXJS 5+ Adapter for Actyx Pond V2",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/actyx-contrib/pond-rx-adapter#readme",
   "peerDependencies": {
-    "@actyx/pond": "~2.4",
+    "@actyx/pond": "^2.5",
     "rxjs": "> 0"
   },
   "devDependencies": {
