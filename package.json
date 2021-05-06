@@ -1,7 +1,7 @@
 {
   "name": "@actyx-contrib/rx-pond",
-  "version": "0.2.0",
-  "description": "RXJS Adapter for Actyx Pond V2",
+  "version": "0.3.0",
+  "description": "RXJS 5+ Adapter for Actyx Pond V2",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {

@@ -55,7 +55,7 @@ export type RxEventFn = {
     chunkSize: number,
   ) => Observable<EventChunk>
   /**
-   * Query all known events that occured after the given `lowerBound`.
+   * Query all known events that occurred after the given `lowerBound`.
    *
    * @param query  - `OpenEndedQuery` object specifying the desired set of events.
    *
@@ -64,7 +64,7 @@ export type RxEventFn = {
    */
   queryAllKnown: (query: AutoCappedQuery) => Observable<EventChunk>
   /**
-   * Query all known events that occured after the given `lowerBound`, in chunks.
+   * Query all known events that occurred after the given `lowerBound`, in chunks.
    * This is useful if the complete result set is potentially too large to fit into memory at once.
    *
    * @param query       - `OpenEndedQuery` object specifying the desired set of events.
