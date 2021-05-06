@@ -40,7 +40,7 @@
     "rxjs": "> 0"
   },
   "devDependencies": {
-    "@actyx/pond": "^2.4.0",
+    "@actyx/pond": "^2.5.0",
     "@types/jest": "25.1.1",
     "@types/node": "10.11.0",
     "@typescript-eslint/eslint-plugin": "^3.3.0",
