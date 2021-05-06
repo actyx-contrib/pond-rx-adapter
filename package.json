@@ -27,7 +27,8 @@
   },
   "keywords": [
     "actyx",
-    "pond"
+    "pond",
+    "rxjs"
   ],
   "author": "Actyx AG",
   "license": "Apache-2.0",
