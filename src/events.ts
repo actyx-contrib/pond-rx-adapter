@@ -159,21 +159,20 @@ export type RxEventFn = {
    *
    * @returns        A `PendingEmission` object that can be used to register callbacks with the emission’s completion.
    */
-  emit: (events: ReadonlyArray<TaggedEvent>) => Observable<void>
+  emit: (events: ReadonlyArray<TaggedEvent>) => Observable<Metadata[]>
 }
 
 export const mkEvents = (pond: Pond): RxEventFn => {
   const events = pond.events()
   return {
-    currentOffsets: () => from(events.currentOffsets()),
+    currentOffsets: () => from(events.offsets().then(offsetResponse => offsetResponse.present)),
 
     queryKnownRange: query => from(events.queryKnownRange(query)),
 
     queryKnownRangeChunked: (query, chunkSize) =>
       new Observable(o => {
         events
-          .queryKnownRangeChunked(query, chunkSize, c => o.next(c))
-          .then(_ => o.complete())
+          .queryKnownRangeChunked(query, chunkSize, c => o.next(c), () => o.complete())
         // can't terminate query
         return () => undefined
       }),
@@ -183,8 +182,7 @@ export const mkEvents = (pond: Pond): RxEventFn => {
     queryAllKnownChunked: (query, chunkSize) =>
       new Observable(o => {
         events
-          .queryAllKnownChunked(query, chunkSize, c => o.next(c))
-          .then(_ => o.complete())
+          .queryAllKnownChunked(query, chunkSize, c => o.next(c), () => o.complete())
         // can't terminate query
         return () => undefined
       }),
@@ -231,7 +229,7 @@ export const mkEvents = (pond: Pond): RxEventFn => {
         ),
       ),
 
-    emit: (e: ReadonlyArray<TaggedEvent>): Observable<void> =>
+    emit: (e: ReadonlyArray<TaggedEvent>): Observable<Metadata[]> =>
       from(events.emit(e).toPromise()),
   }
 }
