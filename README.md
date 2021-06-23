@@ -32,7 +32,25 @@ const fromExisting = RxPond.from(myPond)
 const defaultRxPond = RxPond.default()
 
 // Provide custom parameters (same arguments as Pond.of)
-const parameterizedRxPond = RxPond.of({ url: 'ws://localhost:4243' }, {})
+const parameterizedRxPond = RxPond.of(
+    // Configure AppManifest
+    {
+      appId: 'com.example.rx-pond-example',
+      displayName: 'RX Pond Example',
+      version: '0.0.1',
+      signature: '<signature>'
+    }
+    // Configure connection options 
+    { 
+      actyxHost: 'localhost',
+      actyxPort: '4243',
+      onConnectionLost: () => console.error('connection to Actyx lost')    
+    },
+    // Configure Pond options
+    {
+        fishErrorReporter: (err, fishId, detail) > console.error('fish error', err, fishId, detail)
+    }
+     )
 ```
 
 ## Compatibility
