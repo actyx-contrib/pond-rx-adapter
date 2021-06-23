@@ -37,11 +37,11 @@
   },
   "homepage": "https://github.com/actyx-contrib/pond-rx-adapter#readme",
   "peerDependencies": {
-    "@actyx/pond": "^2.5",
+    "@actyx/pond": "^3",
     "rxjs": "> 0"
   },
   "devDependencies": {
-    "@actyx/pond": "^2.5.0",
+    "@actyx/pond": "^3.0.0-beta1",
     "@types/jest": "25.1.1",
     "@types/node": "10.11.0",
     "@typescript-eslint/eslint-plugin": "^3.3.0",
