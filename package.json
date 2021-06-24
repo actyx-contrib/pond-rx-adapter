@@ -1,6 +1,6 @@
 {
   "name": "@actyx-contrib/rx-pond",
-  "version": "0.3.1",
+  "version": "0.3.0",
   "description": "RXJS 5+ Adapter for Actyx Pond V2",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -41,7 +41,7 @@
     "rxjs": "> 0"
   },
   "devDependencies": {
-    "@actyx/pond": "^3.0.0-beta1",
+    "@actyx/pond": "^3.0.0",
     "@types/jest": "25.1.1",
     "@types/node": "10.11.0",
     "@typescript-eslint/eslint-plugin": "^3.3.0",
