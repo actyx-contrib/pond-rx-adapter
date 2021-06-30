@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+  AppManifest,
   CancelSubscription,
   Fish,
   ObserveAllOpts,
@@ -251,11 +252,7 @@ const wrap = (pond: Pond): RxPond => ({
 })
 
 export const RxPond = {
-  default: async (): Promise<RxPond> => wrap(await Pond.default({
-    appId: 'com.example.rx-pond-example',
-    displayName: 'RX Pond Example',
-    version: '0.0.1'
-  })),
+  default: async (manifest: AppManifest): Promise<RxPond> => wrap(await Pond.default(manifest)),
 
   of: async (params: Parameters<typeof Pond['of']>): Promise<RxPond> =>
     wrap(await Pond.of(...params)),
