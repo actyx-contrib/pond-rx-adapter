@@ -164,14 +164,19 @@ export type RxEventFn = {
 export const mkEvents = (pond: Pond): RxEventFn => {
   const events = pond.events()
   return {
-    currentOffsets: () => from(events.offsets().then(offsetResponse => offsetResponse.present)),
+    currentOffsets: () =>
+      from(events.offsets().then(offsetResponse => offsetResponse.present)),
 
     queryKnownRange: query => from(events.queryKnownRange(query)),
 
     queryKnownRangeChunked: (query, chunkSize) =>
       new Observable(o => {
-        events
-          .queryKnownRangeChunked(query, chunkSize, c => o.next(c), () => o.complete())
+        events.queryKnownRangeChunked(
+          query,
+          chunkSize,
+          c => o.next(c),
+          () => o.complete(),
+        )
         // can't terminate query
         return () => undefined
       }),
@@ -180,8 +185,12 @@ export const mkEvents = (pond: Pond): RxEventFn => {
 
     queryAllKnownChunked: (query, chunkSize) =>
       new Observable(o => {
-        events
-          .queryAllKnownChunked(query, chunkSize, c => o.next(c), () => o.complete())
+        events.queryAllKnownChunked(
+          query,
+          chunkSize,
+          c => o.next(c),
+          () => o.complete(),
+        )
         // can't terminate query
         return () => undefined
       }),

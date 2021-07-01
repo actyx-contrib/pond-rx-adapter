@@ -252,7 +252,8 @@ const wrap = (pond: Pond): RxPond => ({
 })
 
 export const RxPond = {
-  default: async (manifest: AppManifest): Promise<RxPond> => wrap(await Pond.default(manifest)),
+  default: async (manifest: AppManifest): Promise<RxPond> =>
+    wrap(await Pond.default(manifest)),
 
   of: async (params: Parameters<typeof Pond['of']>): Promise<RxPond> =>
     wrap(await Pond.of(...params)),
