@@ -38,7 +38,7 @@
   "homepage": "https://github.com/actyx-contrib/pond-rx-adapter#readme",
   "peerDependencies": {
     "@actyx/pond": "^3",
-    "rxjs": "> 5"
+    "rxjs": "> 0"
   },
   "devDependencies": {
     "@actyx/pond": "^3.0.1",
