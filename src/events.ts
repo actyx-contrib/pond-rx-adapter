@@ -79,16 +79,15 @@ export type RxEventFn = {
   ) => Observable<EventChunk>
   /**
    * Subscribe to all events fitting the `query` after `lowerBound`.
-   * They will be delivered in chunks of at most 5000.
-   * New events are delivered as they become known.
+   *
    * The subscription goes on forever, until manually cancelled.
    *
-   * @param query      - `EventSubscription` object specifying the desired set of events.
-   * @param onChunk    - Callback that will be invoked for each chunk, in sequence. Second argument is the updated offset map.
+   * @param query       - `EventSubscription` object specifying the desired set of events.
+   * @param onEvent     - Callback that will be invoked for each event, in sequence.
    *
    * @returns A function that can be called in order to cancel the subscription.
    */
-  subscribe: (query: EventSubscription) => Observable<EventChunk>
+  subscribe: (query: EventSubscription) => Observable<ActyxEvent>
   /**
    * Observe always the **earliest** event matching the given query.
    * If there is an existing event fitting the query, `onNewEarliest` will be called with that event.
