@@ -79,16 +79,15 @@ export type RxEventFn = {
   ) => Observable<EventChunk>
   /**
    * Subscribe to all events fitting the `query` after `lowerBound`.
-   * They will be delivered in chunks of at most 5000.
-   * New events are delivered as they become known.
+   *
    * The subscription goes on forever, until manually cancelled.
    *
-   * @param query      - `EventSubscription` object specifying the desired set of events.
-   * @param onChunk    - Callback that will be invoked for each chunk, in sequence. Second argument is the updated offset map.
+   * @param query       - `EventSubscription` object specifying the desired set of events.
+   * @param onEvent     - Callback that will be invoked for each event, in sequence.
    *
    * @returns A function that can be called in order to cancel the subscription.
    */
-  subscribe: (query: EventSubscription) => Observable<EventChunk>
+  subscribe: (query: EventSubscription) => Observable<ActyxEvent>
   /**
    * Observe always the **earliest** event matching the given query.
    * If there is an existing event fitting the query, `onNewEarliest` will be called with that event.
@@ -159,21 +158,20 @@ export type RxEventFn = {
    *
    * @returns        A `PendingEmission` object that can be used to register callbacks with the emission’s completion.
    */
-  emit: (events: ReadonlyArray<TaggedEvent>) => Observable<void>
+  emit: (events: ReadonlyArray<TaggedEvent>) => Observable<Metadata[]>
 }
 
 export const mkEvents = (pond: Pond): RxEventFn => {
   const events = pond.events()
   return {
-    currentOffsets: () => from(events.currentOffsets()),
+    currentOffsets: () => from(events.offsets().then(offsetResponse => offsetResponse.present)),
 
     queryKnownRange: query => from(events.queryKnownRange(query)),
 
     queryKnownRangeChunked: (query, chunkSize) =>
       new Observable(o => {
         events
-          .queryKnownRangeChunked(query, chunkSize, c => o.next(c))
-          .then(_ => o.complete())
+          .queryKnownRangeChunked(query, chunkSize, c => o.next(c), () => o.complete())
         // can't terminate query
         return () => undefined
       }),
@@ -183,8 +181,7 @@ export const mkEvents = (pond: Pond): RxEventFn => {
     queryAllKnownChunked: (query, chunkSize) =>
       new Observable(o => {
         events
-          .queryAllKnownChunked(query, chunkSize, c => o.next(c))
-          .then(_ => o.complete())
+          .queryAllKnownChunked(query, chunkSize, c => o.next(c), () => o.complete())
         // can't terminate query
         return () => undefined
       }),
@@ -231,7 +228,7 @@ export const mkEvents = (pond: Pond): RxEventFn => {
         ),
       ),
 
-    emit: (e: ReadonlyArray<TaggedEvent>): Observable<void> =>
+    emit: (e: ReadonlyArray<TaggedEvent>): Observable<Metadata[]> =>
       from(events.emit(e).toPromise()),
   }
 }

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import {
+  AppManifest,
   CancelSubscription,
-  ConnectivityStatus,
   Fish,
   ObserveAllOpts,
   Pond,
@@ -173,11 +173,6 @@ export type RxPond = {
   getPondState(): Observable<PondState>
 
   /**
-   * Get an Observable of this node’s connectivity information. Updates periodically.
-   */
-  getNodeConnectivity(): Observable<ConnectivityStatus>
-
-  /**
    * Wait for the node to get in sync with the swarm.
    * It is strongly recommended that any interaction with the Pond is delayed until the Observable.
    * To obtain progress information about the sync, look at the intermediate values emitted by the Observable.
@@ -244,9 +239,6 @@ const wrap = (pond: Pond): RxPond => ({
 
   getPondState: () => new Observable(o => pond.getPondState(v => o.next(v))),
 
-  getNodeConnectivity: () =>
-    new Observable(o => pond.getNodeConnectivity({ callback: v => o.next(v) })),
-
   waitForSwarmSync: () =>
     new Observable(o =>
       pond.waitForSwarmSync({
@@ -260,7 +252,7 @@ const wrap = (pond: Pond): RxPond => ({
 })
 
 export const RxPond = {
-  default: async (): Promise<RxPond> => wrap(await Pond.default()),
+  default: async (manifest: AppManifest): Promise<RxPond> => wrap(await Pond.default(manifest)),
 
   of: async (params: Parameters<typeof Pond['of']>): Promise<RxPond> =>
     wrap(await Pond.of(...params)),
