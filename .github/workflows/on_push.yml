@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   tests:
-    name: License, Linter, Test
+    name: License, Linter
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -20,5 +20,3 @@ jobs:
         run: npm run license:check-dep
       - name: run linter check
         run: npm run lint
-      - name: run jest test
-        run: npm run test
