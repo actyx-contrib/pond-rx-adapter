@@ -41,7 +41,7 @@ export type RxPond = {
    * @returns        An Observable that completes when emission is done.
    *                 The Observable is *hot*, i.e. emission will happen even when the Observable is not subscribed to.
    */
-  emit<E>(tags: Tags<E>, event: E): Observable<void>
+  emit<E>(tags: Tags<E>, event: E): Observable<undefined>
 
   /* AGGREGATION */
 
@@ -128,7 +128,7 @@ export type RxPond = {
   run<S, EWrite>(
     fish: Fish<S, any>,
     fn: StateEffect<S, EWrite>,
-  ): Observable<void>
+  ): Observable<undefined>
 
   /**
    * Install a StateEffect that will be applied automatically whenever the `Fish`’s State has changed.
@@ -190,8 +190,12 @@ export type RxPond = {
 
 const wrap = (pond: Pond): RxPond => ({
   emit: <E>(tags: Tags<E>, event: E) => {
-    const p = pond.emit(tags, event)
-    return new Observable(o => p.subscribe(() => o.complete()))
+    return new Observable(o =>
+      pond.emit(tags, event).subscribe(() => {
+        o.next(undefined)
+        o.complete()
+      }),
+    )
   },
 
   observe: <S, E>(fish: Fish<S, E>) =>
@@ -227,8 +231,12 @@ const wrap = (pond: Pond): RxPond => ({
     ),
 
   run: <S, EWrite>(fish: Fish<S, any>, fn: StateEffect<S, EWrite>) => {
-    const p = pond.run(fish, fn)
-    return new Observable(o => p.subscribe(() => o.complete()))
+    return new Observable(o =>
+      pond.run(fish, fn).subscribe(() => {
+        o.next(undefined)
+        o.complete()
+      }),
+    )
   },
 
   keepRunning: pond.keepRunning,
